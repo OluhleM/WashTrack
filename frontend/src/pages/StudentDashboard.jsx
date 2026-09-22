@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../api';
 
 function StudentDashboard() {
 
@@ -31,7 +32,7 @@ function StudentDashboard() {
         try {
 
             const userResponse = await fetch(
-                'http://localhost:5000/api/auth/me',
+                `${API_URL}/api/auth/me`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -51,7 +52,7 @@ function StudentDashboard() {
             }
 
             const machineResponse = await fetch(
-                'http://localhost:5000/api/machines'
+                `${API_URL}/api/machines`
             );
 
             const machineData = await machineResponse.json();
@@ -61,7 +62,7 @@ function StudentDashboard() {
             }
 
             const bookingResponse = await fetch(
-                'http://localhost:5000/api/bookings/my',
+                `${API_URL}/api/bookings/my`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -76,7 +77,7 @@ function StudentDashboard() {
             }
 
             const faultResponse = await fetch(
-                'http://localhost:5000/api/fault-reports/my',
+                `${API_URL}/api/fault-reports/my`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -189,7 +190,7 @@ function StudentDashboard() {
         try {
 
             const response = await fetch(
-                'http://localhost:5000/api/fault-reports',
+                `${API_URL}/api/fault-reports`,
                 {
                     method: 'POST',
 
@@ -283,7 +284,7 @@ function StudentDashboard() {
         try {
 
             const response = await fetch(
-                'http://localhost:5000/api/bookings',
+                `${API_URL}/api/bookings`,
                 {
                     method: 'POST',
 
@@ -372,7 +373,7 @@ function StudentDashboard() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/bookings/${bookingId}/cancel`,
+                `${API_URL}/api/bookings/${bookingId}/cancel`,
                 {
                     method: 'PUT',
                     headers: {
@@ -564,8 +565,8 @@ function StudentDashboard() {
                         {user?.points}
                     </strong>{' '}
                     <span className="points-label">
-        points remaining
-    </span>
+    points remaining
+</span>
                 </p>
 
             </div>
@@ -588,9 +589,9 @@ function StudentDashboard() {
 
             {/* ACTIVE BOOKING */}
 
-            <section>
+            <section className="dashboard-section">
 
-                <h2>
+                <h2 className="section-title">
                     Current Booking
                 </h2>
 
@@ -613,12 +614,7 @@ function StudentDashboard() {
 
                             <div
                                 key={booking._id}
-                                style={{
-                                    border: '1px solid #ddd',
-                                    borderRadius: '10px',
-                                    padding: '15px',
-                                    marginBottom: '15px'
-                                }}
+                                className="current-booking"
                             >
 
                                 <h3>
@@ -628,7 +624,7 @@ function StudentDashboard() {
 
                                 <p>
                                     Status:{' '}
-                                    <strong>
+                                    <strong className="booking-status">
                                         Active
                                     </strong>
                                 </p>
@@ -691,14 +687,108 @@ function StudentDashboard() {
 
             </section>
 
+            <section className="report-fault-section">
+
+                <div className="report-fault-header">
+                    <div>
+                        <h2 className="report-fault-title">Report a Fault</h2>
+                        <p className="report-fault-description">
+                            Is there a problem with a washing machine or dryer?
+                            Report it here so the residence manager can investigate.
+                        </p>
+                    </div>
+
+                    <div className="report-fault-icon">
+                        ⚠
+                    </div>
+                </div>
+
+                <form onSubmit={handleReportFault}>
+
+                    <div>
+
+                        <label>
+                            Machine
+                        </label>
+
+                        <br />
+
+                        <select
+                            value={faultMachine}
+                            onChange={(e) =>
+                                setFaultMachine(e.target.value)
+                            }
+                        >
+
+                            <option value="">
+                                Select a machine
+                            </option>
+
+                            {machines.map(machine => (
+
+                                <option
+                                    key={machine._id}
+                                    value={machine.machineId}
+                                >
+                                    {machine.machineId} - {machine.name}
+                                </option>
+
+                            ))}
+
+                        </select>
+
+                    </div>
+
+                    <br />
+
+                    <div>
+
+                        <label>
+                            Describe the problem
+                        </label>
+
+                        <br />
+
+                        <textarea
+                            value={faultDescription}
+                            onChange={(e) =>
+                                setFaultDescription(e.target.value)
+                            }
+                            placeholder="Describe the problem with the machine..."
+                            rows="4"
+                            cols="50"
+                        />
+
+                    </div>
+
+                    <br />
+
+                    <button
+                        type="submit"
+                        className="report-fault-button"
+                    >
+                        Submit Fault Report
+                    </button>
+
+                </form>
+
+            </section>
 
             {/* BOOKING HISTORY */}
 
-            <section>
+            <section className="booking-history-section">
 
-                <h2>
-                    My Bookings
-                </h2>
+                <div className="section-heading-row">
+                    <div>
+                        <h2 className="section-title">
+                            My Bookings
+                        </h2>
+
+                        <p className="section-description">
+                            View your previous and current laundry bookings.
+                        </p>
+                    </div>
+                </div>
 
                 {bookings.length === 0 ? (
 
@@ -712,15 +802,11 @@ function StudentDashboard() {
 
                         <div
                             key={booking._id}
-                            style={{
-                                border: '1px solid #ddd',
-                                borderRadius: '10px',
-                                padding: '15px',
-                                marginBottom: '10px'
-                            }}
+                            className="booking-card"
                         >
                             {booking.status === 'active' && (
                                 <button
+                                    className="danger-button"
                                     onClick={() => handleCancelBooking(booking._id)}
                                 >
                                     Cancel Booking
@@ -762,96 +848,21 @@ function StudentDashboard() {
             </section>
 
 
-            {/* FUTURE FAULT REPORT */}
-
-            {/* REPORT A FAULT */}
-
-            <section>
-
-                <h2>
-                    Report a Fault
-                </h2>
-
-                <form onSubmit={handleReportFault}>
-
-                    <div>
-
-                        <label>
-                            Machine
-                        </label>
-
-                        <br />
-
-                        <select
-                            value={faultMachine}
-                            onChange={(e) =>
-                                setFaultMachine(e.target.value)
-                            }
-                        >
-
-                            <option value="">
-                                Select a machine
-                            </option>
-
-                            {machines.map(machine => (
-
-                                <option
-                                    key={machine._id}
-                                    value={machine.machineId}
-                                >
-                                    {machine.machineId} - {machine.name}
-                                </option>
-
-                            ))}
-
-                        </select>
-
-                    </div>
-
-
-                    <br />
-
-
-                    <div>
-
-                        <label>
-                            Describe the problem
-                        </label>
-
-                        <br />
-
-                        <textarea
-                            value={faultDescription}
-                            onChange={(e) =>
-                                setFaultDescription(e.target.value)
-                            }
-                            placeholder="Describe the problem with the machine..."
-                            rows="4"
-                            cols="50"
-                        />
-
-                    </div>
-
-
-                    <br />
-
-
-                    <button type="submit">
-                        Submit Fault Report
-                    </button>
-
-                </form>
-
-            </section>
-
-
             {/* MY FAULT REPORTS */}
 
-            <section>
+            <section className="fault-history-section">
 
-                <h2>
-                    My Fault Reports
-                </h2>
+                <div className="section-heading-row">
+                    <div>
+                        <h2 className="section-title">
+                            My Fault Reports
+                        </h2>
+
+                        <p className="section-description">
+                            View faults you have reported and their current status.
+                        </p>
+                    </div>
+                </div>
 
                 {faultReports.length === 0 ? (
 
@@ -865,12 +876,7 @@ function StudentDashboard() {
 
                         <div
                             key={report._id}
-                            style={{
-                                border: '1px solid #ddd',
-                                borderRadius: '10px',
-                                padding: '15px',
-                                marginBottom: '10px'
-                            }}
+                            className="fault-card"
                         >
 
                             <h3>
@@ -890,8 +896,16 @@ function StudentDashboard() {
 
                             <p>
                                 Status:{' '}
-                                <strong>
-                                    {report.status}
+                                <strong
+                                    className={`fault-status ${
+                                        report.status === 'resolved'
+                                            ? 'resolved'
+                                            : ''
+                                    }`}
+                                >
+                                    {report.status === 'resolved'
+                                        ? 'Resolved'
+                                        : 'Open'}
                                 </strong>
                             </p>
 

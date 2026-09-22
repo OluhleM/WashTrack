@@ -50,7 +50,7 @@ router.post('/', protect, async (req, res) => {
                 }
             },
             {
-                new: true
+                returnDocument: 'after'
             }
         );
 
@@ -73,7 +73,7 @@ router.post('/', protect, async (req, res) => {
                 }
             },
             {
-                new: true
+                returnDocument: 'after'
             }
         );
 

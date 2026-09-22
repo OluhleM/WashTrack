@@ -6,15 +6,18 @@ const expireBookings = require('../utils/bookingExpiry');
 const router = express.Router();
 
 
-// ==================== GET MACHINES ====================
+// =====================================
+// VIEW ACTIVE MACHINES
+// =====================================
 
 router.get('/', async (req, res) => {
     try {
 
-        // Release any expired bookings first
         await expireBookings();
 
-        const machines = await Machine.find().sort({
+        const machines = await Machine.find({
+            active: { $ne: false }
+        }).sort({
             room: 1,
             type: 1,
             machineId: 1
@@ -34,6 +37,8 @@ router.get('/', async (req, res) => {
         });
     }
 });
+
+module.exports = router;
 
 
 module.exports = router;

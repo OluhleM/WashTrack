@@ -34,3 +34,11 @@ backend/.env
 # Dependencies
 backend/node_modules/
 frontend/node_modules/
+
+# Frontend build files
+frontend/dist/
+
+# General environment files
+.env
+.env.*
+!.env.example

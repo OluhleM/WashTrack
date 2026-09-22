@@ -5,17 +5,20 @@ const machineSchema = new mongoose.Schema(
         machineId: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
+            trim: true
         },
 
         name: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
 
         room: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
 
         type: {
@@ -33,6 +36,13 @@ const machineSchema = new mongoose.Schema(
         bookedUntil: {
             type: Date,
             default: null
+        },
+
+        // true = currently part of the laundry inventory
+        // false = removed from service
+        active: {
+            type: Boolean,
+            default: true
         }
     },
     {
