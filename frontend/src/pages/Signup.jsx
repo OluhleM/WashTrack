@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import API_URL from '../api';
 
 function Signup() {
-
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -17,108 +16,57 @@ function Signup() {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
-
     const handleChange = (event) => {
-
         setFormData({
             ...formData,
             [event.target.name]: event.target.value
         });
     };
 
-
     const handleSubmit = async (event) => {
-
         event.preventDefault();
-
         setMessage('');
         setLoading(true);
 
         try {
-
-            const response = await fetch(
-                `${API_URL}/api/auth/signup`,
-                {
-                    method: 'POST',
-
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-
-                    body: JSON.stringify(formData)
-                }
-            );
+            const response = await fetch(`${API_URL}/api/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
 
             const data = await response.json();
 
             if (!response.ok) {
-
-                setMessage(
-                    data.message || 'Signup failed'
-                );
-
+                setMessage(data.message || 'Signup failed');
                 return;
             }
 
-
-            setMessage(
-                'Account created successfully!'
-            );
-
-
-            setTimeout(() => {
-                navigate('/login');
-            }, 1000);
-
+            // Go to the email verification screen
+            navigate('/verify', { state: { email: formData.email } });
         } catch (error) {
-
-            console.error(
-                'Signup error:',
-                error
-            );
-
-            setMessage(
-                'Unable to connect to the server.'
-            );
-
+            console.error('Signup error:', error);
+            setMessage('Unable to connect to the server.');
         } finally {
-
             setLoading(false);
         }
     };
 
-
     return (
         <div className="auth-page">
-
             <div className="auth-card">
+                <div className="auth-brand">WashTrack</div>
 
-                <div className="auth-brand">
-                    WashTrack
-                </div>
-
-                <h1>
-                    Create Account
-                </h1>
+                <h1>Create Account</h1>
 
                 <p className="auth-subtitle">
                     Create your account to start using WashTrack.
                 </p>
 
-
-                <form
-                    className="auth-form"
-                    onSubmit={handleSubmit}
-                >
-
+                <form className="auth-form" onSubmit={handleSubmit}>
                     <div className="auth-form-row">
-
                         <div className="auth-form-group">
-
-                            <label htmlFor="signup-name">
-                                Name
-                            </label>
-
+                            <label htmlFor="signup-name">Name</label>
                             <input
                                 id="signup-name"
                                 type="text"
@@ -128,16 +76,10 @@ function Signup() {
                                 onChange={handleChange}
                                 required
                             />
-
                         </div>
 
-
                         <div className="auth-form-group">
-
-                            <label htmlFor="signup-surname">
-                                Surname
-                            </label>
-
+                            <label htmlFor="signup-surname">Surname</label>
                             <input
                                 id="signup-surname"
                                 type="text"
@@ -147,18 +89,11 @@ function Signup() {
                                 onChange={handleChange}
                                 required
                             />
-
                         </div>
-
                     </div>
 
-
                     <div className="auth-form-group">
-
-                        <label htmlFor="signup-email">
-                            Email
-                        </label>
-
+                        <label htmlFor="signup-email">Email</label>
                         <input
                             id="signup-email"
                             type="email"
@@ -168,16 +103,10 @@ function Signup() {
                             onChange={handleChange}
                             required
                         />
-
                     </div>
 
-
                     <div className="auth-form-group">
-
-                        <label htmlFor="signup-password">
-                            Password
-                        </label>
-
+                        <label htmlFor="signup-password">Password</label>
                         <input
                             id="signup-password"
                             type="password"
@@ -187,72 +116,36 @@ function Signup() {
                             onChange={handleChange}
                             required
                         />
-
                     </div>
 
-
                     <div className="auth-form-group">
-
-                        <label htmlFor="signup-role">
-                            Account Type
-                        </label>
-
+                        <label htmlFor="signup-role">Account Type</label>
                         <select
                             id="signup-role"
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
                         >
-
-                            <option value="student">
-                                Student
-                            </option>
-
-                            <option value="manager">
-                                Manager
-                            </option>
-
+                            <option value="student">Student</option>
+                            <option value="manager">Manager</option>
                         </select>
-
                     </div>
-
 
                     <button
                         className="auth-button"
                         type="submit"
                         disabled={loading}
                     >
-                        {loading
-                            ? 'Creating Account...'
-                            : 'Create Account'
-                        }
+                        {loading ? 'Sending code...' : 'Create Account'}
                     </button>
-
                 </form>
 
-
-                {message && (
-                    <div
-                        className={
-                            message.includes('successfully')
-                                ? 'auth-success'
-                                : 'auth-error'
-                        }
-                    >
-                        {message}
-                    </div>
-                )}
-
+                {message && <div className="auth-error">{message}</div>}
 
                 <p className="auth-footer">
-                    Already have an account?{' '}
-                    <Link to="/login">
-                        Log in
-                    </Link>
+                    Already have an account? <Link to="/login">Log in</Link>
                 </p>
-
             </div>
-
         </div>
     );
 }
