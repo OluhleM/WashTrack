@@ -1,0 +1,123 @@
+/* WashTrack UI upgrade: full-screen layout + polished auth. Loaded after index.css. */
+html, body, #root { width: 100%; min-height: 100vh; }
+
+/* Full-width dashboards */
+.dashboard {
+    max-width: 1680px !important;
+    width: 100%;
+    padding: clamp(16px, 2.5vw, 44px) !important;
+}
+
+/* Full-screen auth with soft brand background */
+.auth-page {
+    min-height: 100vh !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 4vw, 48px) !important;
+    background:
+            radial-gradient(900px 500px at 10% 0%, rgba(21, 87, 166, .16), transparent 60%),
+            radial-gradient(800px 500px at 100% 100%, rgba(229, 138, 43, .16), transparent 55%),
+            #f4f7fb !important;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 480px !important;
+    background: #fff !important;
+    border: 1px solid #e3e8ef !important;
+    border-radius: 22px !important;
+    padding: clamp(24px, 4vw, 40px) !important;
+    box-shadow: 0 24px 60px -24px rgba(21, 87, 166, .35), 0 2px 6px rgba(41, 45, 50, .05) !important;
+    animation: authIn .45s cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes authIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.auth-brand {
+    display: inline-block;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    font-size: 20px;
+    color: #1557a6 !important;
+    margin-bottom: 14px;
+}
+
+.auth-card h1 {
+    font-size: clamp(26px, 3vw, 32px) !important;
+    letter-spacing: -.02em;
+}
+
+.auth-form-group input,
+.auth-form-group select {
+    min-height: 48px;
+    border-radius: 12px !important;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.auth-form-group input:focus,
+.auth-form-group select:focus {
+    border-color: #1557a6 !important;
+    box-shadow: 0 0 0 4px rgba(21, 87, 166, .15) !important;
+    outline: none;
+}
+
+.auth-button {
+    min-height: 50px;
+    border-radius: 12px !important;
+    width: 100%;
+    background: linear-gradient(180deg, #1c6bc4, #1557a6) !important;
+    box-shadow: 0 10px 22px -10px rgba(21, 87, 166, .7);
+    transition: transform .12s, box-shadow .15s;
+}
+
+.auth-button:hover:not(:disabled) { transform: translateY(-1px); }
+
+/* OTP boxes */
+.otp-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 22px 0 14px;
+}
+
+.otp-box {
+    width: 52px;
+    height: 62px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    border: 1.5px solid #dde2e7;
+    border-radius: 12px;
+    background: #f9fafc;
+    color: #292d32;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.otp-box:focus {
+    border-color: #1557a6;
+    box-shadow: 0 0 0 4px rgba(21, 87, 166, .15);
+    outline: none;
+    background: #fff;
+}
+
+.link-button {
+    background: none;
+    border: 0;
+    color: #1557a6;
+    font-weight: 700;
+    padding: 0;
+}
+
+.link-button:disabled { color: #8a94a0; cursor: default; }
+
+.auth-card .auth-error { margin-bottom: 14px; }
+
+@media (max-width: 480px) {
+    .otp-box { width: 44px; height: 54px; font-size: 22px; }
+    .otp-row { gap: 7px; }
+}

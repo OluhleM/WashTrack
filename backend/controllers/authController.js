@@ -97,6 +97,14 @@ const login = async (req, res) => {
             });
         }
 
+        if (user.emailVerified === false) {
+            return res.status(403).json({
+                message: 'Please verify your email first',
+                needsVerification: true,
+                email: user.email
+            });
+        }
+
         // Create JWT token
         const token = jwt.sign(
             {
